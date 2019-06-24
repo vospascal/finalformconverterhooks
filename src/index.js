@@ -17,6 +17,7 @@ function App() {
       account: {
         accountNumber: '',
       },
+      list: [{ name: 'test' }, { name: 'case' }, { name: 'array' }],
     },
   };
   const [mainObj, setMainObj] = useState(test);
@@ -34,6 +35,10 @@ function App() {
       key: 'test',
       references: ['product1.test'],
     },
+    {
+      key: 'list',
+      references: ['product2.list'],
+    },
   ];
 
   const [converted, convertedCallback] = FinalFormConverterHook({
@@ -50,15 +55,41 @@ function App() {
   return (
     <div className="App">
       <pre>{JSON.stringify(mainObj, null, 2)}</pre>
+      <hr />
       <pre>{JSON.stringify(converted, null, 2)}</pre>
       <p>{converted.accountNumber}</p>
       <p>{converted.test}</p>
       <button
         onClick={e => {
-          convertedCallback({ accountNumber: '123456', test: 'case' });
+          convertedCallback({
+            ...converted,
+            list: [{ name: 'a' }, ...converted.list.slice(1)],
+          });
         }}
       >
-        click
+        click1
+      </button>
+      <button
+        onClick={e => {
+          convertedCallback({
+            ...converted,
+            accountNumber: '123456',
+            test: 'case',
+          });
+        }}
+      >
+        click2
+      </button>
+      <button
+        onClick={e => {
+          convertedCallback({
+            accountNumber: '7890',
+            test: 'array',
+            list: [{ name: 'some' }, ...converted.list.slice(1)],
+          });
+        }}
+      >
+        click3
       </button>
     </div>
   );
